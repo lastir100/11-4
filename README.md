@@ -53,20 +53,23 @@ WHERE length > (SELECT AVG(length) FROM film);
 
 ### Решение 3
 ```sql
-SELECT DATE_FORMAT(payment_date, '%Y-%m') AS month_year,
-       sum(amount) as total_rent from payment 
-GROUP BY month_year 
-ORDER BY total_rent DESC 
+SELECT 
+    DATE_FORMAT(p.payment_date, '%Y-%m') AS month,
+    SUM(p.amount) AS month_payments,
+    COUNT(r.rental_id) AS month_rentals
+FROM payment p
+JOIN rental r ON p.rental_id = r.rental_id
+GROUP BY  month
+ORDER BY month_payments DESC
 LIMIT 1;
 
-+------------+------------+
-| month_year | total_rent |
-+------------+------------+
-| 2005-07    |   28368.91 |
-+------------+------------+
++---------+----------------+---------------+
+| month   | month_payments | month_rentals |
++---------+----------------+---------------+
+| 2005-07 |       28368.91 |          6709 |
++---------+----------------+---------------+
 
 ```
-
 
 ## Дополнительные задания (со звёздочкой*)
 Эти задания дополнительные, то есть не обязательные к выполнению, и никак не повлияют на получение вами зачёта по этому домашнему заданию. Вы можете их выполнить, если хотите глубже шире разобраться в материале.
